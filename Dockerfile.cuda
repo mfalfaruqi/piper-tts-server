@@ -1,0 +1,19 @@
+FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04 AS base
+
+WORKDIR /app
+
+# System dependencies
+RUN apt-get update && apt-get install -y \
+    python3-pip python3-dev ffmpeg wget && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies (including torch with CUDA)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt onnxruntime-gpu
+
+# Copy server code
+COPY server.py .
+RUN mkdir models output
+
+EXPOSE 8000
+CMD ["python", "server.py"]

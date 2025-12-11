@@ -1,15 +1,22 @@
-FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04 AS base
+FROM python:3.10-slim
 
 WORKDIR /app
-# System dependencies
+
+# Install system dependencies
+# ffmpeg is required for audio format conversion 
 RUN apt-get update && apt-get install -y \
-    python3-pip python3-dev ffmpeg wget && \
-    rm -rf /var/lib/apt/lists/*
-# Install Python dependencies (including torch with CUDA)
+    ffmpeg \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
 # Copy server code
 COPY server.py .
 RUN mkdir models output
+
 EXPOSE 8000
+
 CMD ["python", "server.py"]

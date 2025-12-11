@@ -1,7 +1,12 @@
 services:
   piper-tts-server:
     container_name: piper-tts-server
-    build: .
+    # build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      # enable if you have nvidia gpu
+      # dockerfile: Dockerfile.cuda 
     image: piper-tts-server:latest
     ports:
       - "8000:8000"
@@ -10,7 +15,7 @@ services:
     environment:
       - DEFAULT_PIPER_MODEL=ar_JO-kareem-medium
 
-    # enable if you have nvidia driver
+    # enable if you have nvidia gpu
     # deploy:
     #   resources:
     #     reservations:
