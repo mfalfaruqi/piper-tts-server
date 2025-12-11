@@ -1,0 +1,20 @@
+services:
+  piper-tts-server:
+    container_name: piper-tts-server
+    build: .
+    image: piper-tts-server:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+    environment:
+      - DEFAULT_PIPER_MODEL=ar_JO-kareem-medium
+
+    # enable if you have nvidia driver
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]

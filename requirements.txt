@@ -1,0 +1,7 @@
+litserve
+piper-tts
+fastapi
+pydantic
+pydub
+torch
+onnxruntime-gpu
