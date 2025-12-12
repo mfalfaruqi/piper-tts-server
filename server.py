@@ -20,6 +20,11 @@ class PiperTTSAPI(ls.LitAPI):
         (without the .onnx extension). The default model can still be set via
         ``DEFAULT_PIPER_MODEL`` environment variables.
         """
+
+        use_cuda = torch.cuda.is_available()
+        if use_cuda:
+            print("CUDA is available, GPU acceleration is enabled")
+
         self.models = {}
         models_dir = os.path.join(os.path.dirname(__file__), "models")
         # Scan for *.onnx files and load corresponding config
@@ -36,12 +41,6 @@ class PiperTTSAPI(ls.LitAPI):
 
         # Store a reference to the default model name (first loaded if not set)
         self.default_model = next(iter(self.models)) if self.models else None
-
-        use_cuda = torch.cuda.is_available()
-        if use_cuda:
-            print("CUDA is available, GPU acceleration is enabled")
-
-        self.use_cuda = use_cuda
 
     def decode_request(self, request):
         """Validate and extract request parameters.
@@ -83,7 +82,7 @@ class PiperTTSAPI(ls.LitAPI):
         output_path = f"output/output_{uuid.uuid4()}.wav"
         # Synthesize to a WAV buffer with proper header
         with wave.open(output_path, "wb") as wav_file:
-            voice_obj.synthesize_wav(text, wav_file, use_cuda=self.use_cuda)
+            voice_obj.synthesize_wav(text, wav_file)
         return output_path
 
     def encode_response(self, wav_path):

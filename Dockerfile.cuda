@@ -1,10 +1,10 @@
-FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04 AS base
+FROM pytorch/pytorch:2.3.1-cuda12.1-cudnn8-runtime
 
 WORKDIR /app
 
 # System dependencies
 RUN apt-get update && apt-get install -y \
-    python3-pip python3-dev ffmpeg wget && \
+    ffmpeg wget && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies (including torch with CUDA)
